@@ -5,10 +5,8 @@ import PercyEnvironment from 'percy-client/dist/environment';
 import packageJSON from '../package.json';
 import type FileSystemAssetLoader from './FileSystemAssetLoader';
 
-import * as url from 'url';
-
 /*
- * Interface betwen the puppeteer browser and the percy API.
+ * Interface for the percy API.
  */
 class Percy {
   client: PercyClient;
@@ -32,7 +30,8 @@ class Percy {
      */
   async snapshot(
     name: string,
-    page: puppeteer.Page,
+    resourceUrl: string,
+    content: string,
     options: {
       widths?: string[],
       enableJavaScript?: boolean,
@@ -43,14 +42,9 @@ class Percy {
       return;
     }
 
-    const pageUrl = page.url();
-    const path = url.parse(pageUrl).path;
-
-    const snapshotContent = await page.content();
-
     const rootResource = this.client.makeResource({
-      resourceUrl: path,
-      content: snapshotContent,
+      resourceUrl: resourceUrl,
+      content: content,
       isRoot: true,
       mimetype: 'text/html',
     });
@@ -82,7 +76,9 @@ class Percy {
     const resources = await this.gatherBuildResources();
 
     // Create the build
-    const buildResponse = await this.client.createBuild(this.environment.repo, { resources });
+    const buildResponse = await this.client.createBuild(this.environment.repo, {
+      resources,
+    });
     this.buildId = buildResponse.body.data.id;
     this.webUrl = buildResponse.body.data.attributes['web-url'];
 
