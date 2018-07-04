@@ -1,29 +1,26 @@
-# @percy/puppeteer
+# percy-js-snapshot
 
 Percy visual testing for Google Puppeteer.
 
-# Beta Release
-
-@percy/puppeteer is in early beta. It may contain bugs and sharp edges, and change in backwards-incompatible ways until v1.0.0 is released.
-
-# Install
+## Install
 
 ```
-$ npm install puppeteer @percy/puppeteer --dev
+$ npm install percy-js-snapshot --dev
 ```
 
-# Usage
+## Usage
 
 ```js
-import puppeteer from 'puppeteer';
-import { Percy, FileSystemAssetLoader } from '@percy/puppeteer';
+import { Percy, FileSystemAssetLoader } from 'percy-js-snapshot';
 
 // Create a Percy client
 const percy = new Percy({
     loaders: [
         new FileSystemAssetLoader({
-            buildDir: './some-local-folder',
-            mountPath: '/public/'
+            // Path to find assets that the HTML links to
+            buildDir: './dist',
+            // A prefix to add to linked assets if they are in a different directory (e.g. /public/)
+            mountPath: '/'
         })
     ]
 });
@@ -31,20 +28,17 @@ const percy = new Percy({
 // Start a Percy build
 await percy.startBuild();
 
-// Launch the browser and visit example.com
-const browser = await puppeteer.launch();
-const page = await browser.newPage();
-await page.goto('https://example.com');
+// Generate the HTML you want to snapshot. This might be reading a file from
+// disk, or jsdom.serializeDocument(document) on a JSDOM document.
+const content = ...;
 
 // Take a snapshot
-await percy.snapshot('Snapshot of example.com', page);
+await percy.snapshot('Snapshot of example.com', '/', content);
 
 // Tell Percy we're finished taking snapshots
 await percy.finalizeBuild();
-
-// Close the browser
-browser.close();
 ```
 
 # Acknowledgements
-This package was originally forked from [percy-puppeteer](https://github.com/GitbookIO/percy-puppeteer), created by [Samy Pessé](https://twitter.com/SamyPesse) from [GitBook](https://www.gitbook.com/).  Thank you Samy!
+
+This package was originally forked from [percy-puppeteer](https://github.com/GitbookIO/percy-puppeteer), created by [Samy Pessé](https://twitter.com/SamyPesse) from [GitBook](https://www.gitbook.com/). Thank you Samy!
