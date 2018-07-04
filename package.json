@@ -1,7 +1,7 @@
 {
-  "name": "@percy/puppeteer",
-  "version": "0.3.2",
-  "description": "Percy.io integration with Google Puppeteer",
+  "name": "percy-js-snapshot",
+  "version": "0.0.1",
+  "description": "Framework agnostic JavaScript library for Percy",
   "main": "./lib/index.js",
   "repository": {
     "type": "git",

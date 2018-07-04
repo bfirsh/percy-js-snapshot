@@ -20,7 +20,7 @@ class Percy {
   constructor({ loaders }: { loaders: FileSystemAssetLoader[] }) {
     const token = process.env.PERCY_TOKEN;
     const apiUrl = process.env.PERCY_API;
-    const clientInfo = `@percy/puppeteer ${packageJSON.version}`;
+    const clientInfo = `percy-js-snapshot ${packageJSON.version}`;
 
     this.client = new PercyClient({ token, apiUrl, clientInfo });
     this.environment = new PercyEnvironment(process.env);
