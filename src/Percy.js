@@ -46,8 +46,6 @@ class Percy {
     const pageUrl = page.url();
     const path = url.parse(pageUrl).path;
 
-    await this.setBaseIfMissing(page, pageUrl);
-
     const snapshotContent = await page.content();
 
     const rootResource = this.client.makeResource({
@@ -70,18 +68,6 @@ class Percy {
 
     await this.uploadMissingResources(snapshotResponse, shaToResource);
     await this.client.finalizeSnapshot(snapshotId);
-  }
-
-  // If the page doesn't have a base, create one using baseUrl
-  async setBaseIfMissing(page: puppeteer.Page, baseUrl: string): Promise<void> {
-    const missingBase = await page.evaluate(() => document.querySelector('base') == null);
-    if (missingBase) {
-      const base = `<base href="${baseUrl}">`;
-      await page.evaluate(base => {
-        let head = document.querySelector('head');
-        head.insertAdjacentHTML('afterbegin', base);
-      }, base);
-    }
   }
 
   /*
